@@ -7,10 +7,8 @@ DeepSeek Harness Web 客户端插件：让执行过程中的 Think 思考行始�
 - 强制显示被 dsh-auto-collapse 等折叠插件隐藏的 `[data-variant="think"]` 思考行
 - 思考行进入 `running`（流式输出中）状态时自动展开，完整思考过程实时可见
 - 不干扰工具卡的折叠效果（保留 dsh-auto-collapse 对工具卡的行为）
-- 每个回合注入语言指令（通过官方 agent/pre-step 机制）：思考过程与回复语言跟随 Harness 界面语言（设置 → 通用 → 语言）
-  - Harness 语言为中文 → 始终用中文思考与回复
-  - Harness 语言为 English → always think and reply in English
-  - 未显式设置语言时 → 检测用户消息语言，并用同一种语言下发规则（中文消息 → 中文思考；English message → English thinking）
+- 每个回合注入中文语言规则（通过官方 agent/pre-step 机制）：始终强制中文思考（Think / reasoning）与回复
+  - 规则本身用中文书写，避免自指矛盾
   - 兼容 minimal 等使用 complete persona 的预设（普通 system prompt 会被该预设丢弃）
 
 ## 安装
