@@ -1,17 +1,21 @@
 // dsh-think-autoexpand — host half.
 // Browser half keeps Think rows visible and auto-expanded.
-// Host half injects a system-prompt section so the agent's thinking
-// language follows the DeepSeek Harness interface language (locale setting).
+// Host half injects a per-turn language instruction through the official
+// "agent/pre-step" waterfall (same mechanism as dsh-agent-instructions), so
+// it works even when the active preset uses a complete persona prompt that
+// drops ordinary system-prompt sections.
+
+import { createUserMessage } from '@deepseek-ai/dsh-llm'
 
 export const name = 'dsh-think-autoexpand'
-export const inject = ['systemPrompt']
+export const inject = []
 
-const SECTION_NAME = 'dsh-think-autoexpand-language'
+const PLUGIN = 'dsh-think-autoexpand'
 
 const PROMPTS = {
-  zh: 'DeepSeek Harness 界面语言是中文。你的思考过程（Think / reasoning 内容）和回复都必须始终使用中文，即使用户使用其他语言。',
-  en: 'The DeepSeek Harness interface language is English. Your thinking process (Think / reasoning content) and replies must always be in English, even if the user writes in another language.',
-  auto: "Match your thinking process (Think / reasoning content) and replies to the DeepSeek Harness interface language. When the interface language cannot be determined, use the same language as the user's most recent message.",
+  zh: '重要语言规则：请始终使用中文进行思考（Think / reasoning 内容）和回复。即使用户或上下文使用其他语言，也必须输出中文。',
+  en: 'Important language rule: Always think (Think / reasoning content) and reply in English, even if the user or context uses another language.',
+  auto: "Important language rule: Match your thinking (Think / reasoning content) and replies to the DeepSeek Harness interface language. When the interface language cannot be determined, use the same language as the user's most recent message.",
 }
 
 function readHarnessLocale(ctx) {
@@ -28,7 +32,7 @@ function readHarnessLocale(ctx) {
   }
 }
 
-function promptText(ctx) {
+function instructionFor(ctx) {
   const locale = readHarnessLocale(ctx)
   if (locale === 'zh') return PROMPTS.zh
   if (locale === 'en') return PROMPTS.en
@@ -36,10 +40,21 @@ function promptText(ctx) {
 }
 
 export function apply(ctx) {
-  ctx.systemPrompt.section({
-    name: SECTION_NAME,
-    // Before the persona so the instruction is read first every turn.
-    order: -90,
-    text: () => promptText(ctx),
+  ctx.on('agent/pre-step', async (event, next) => {
+    const decision = await next()
+    if (decision.kind === 'reject' || event.step !== 1) return decision
+    if (decision.messages.length === 0) return decision
+    if (decision.messages.some((message) => message.source?.plugin === PLUGIN)) return decision
+
+    const message = createUserMessage({
+      content: [{ type: 'text', text: instructionFor(ctx) }],
+      source: { kind: 'plugin', plugin: PLUGIN },
+    })
+
+    const lastClaimedIndex = decision.messages.findLastIndex((message) => event.messages.includes(message))
+    return {
+      kind: 'enter',
+      messages: decision.messages.toSpliced(lastClaimedIndex + 1, 0, message),
+    }
   })
 }

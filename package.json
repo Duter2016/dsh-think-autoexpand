@@ -1,6 +1,6 @@
 {
   "name": "dsh-think-autoexpand",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Keep Think reasoning rows visible and auto-expanded, and align the agent thinking language with the DeepSeek Harness UI language. 保持 Think 思考行可见并自动展开，让思考语言与 Harness 界面语言一致。",
   "license": "MIT",
   "type": "module",
@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "*",
-    "@deepseek-ai/dsh-system-prompt": "*",
+    "@deepseek-ai/dsh-llm": "*",
     "@deepseek-ai/dsh-settings": "*"
   }
 }
