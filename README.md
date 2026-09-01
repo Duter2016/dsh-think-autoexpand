@@ -10,7 +10,7 @@ DeepSeek Harness Web 客户端插件：让执行过程中的 Think 思考行始�
 - 每个回合注入语言指令（通过官方 agent/pre-step 机制）：思考过程与回复语言跟随 Harness 界面语言（设置 → 通用 → 语言）
   - Harness 语言为中文 → 始终用中文思考与回复
   - Harness 语言为 English → always think and reply in English
-  - 未显式设置语言时 → 跟随用户最新消息的语言
+  - 未显式设置语言时 → 检测用户消息语言，并用同一种语言下发规则（中文消息 → 中文思考；English message → English thinking）
   - 兼容 minimal 等使用 complete persona 的预设（普通 system prompt 会被该预设丢弃）
 
 ## 安装
