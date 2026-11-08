@@ -15,7 +15,8 @@ DeepSeek Harness Web 客户端插件：让执行过程中的 Think 思考行始�
 
 ```bash
 # 按实际的 profile 名替换 web（当前 GUI 用 web；desktop 由 Electron 独占）
-dsh plugin --profile web add github:2877905731/dsh-think-autoexpand
+# 用 fork 版：上游 0.3.0 仍带 v4 报错
+dsh plugin --profile web add github:Duter2016/dsh-think-autoexpand
 ```
 
 安装后重启 dsh Web 服务生效。
