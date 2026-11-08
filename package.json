@@ -1,6 +1,6 @@
 {
   "name": "dsh-think-autoexpand",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Keep Think reasoning rows visible and auto-expanded, and always force Chinese thinking and replies. 保持 Think 思考行可见并自动展开，并始终强制中文思考与回复。",
   "license": "MIT",
   "type": "module",

@@ -14,13 +14,19 @@ DeepSeek Harness Web 客户端插件：让执行过程中的 Think 思考行始�
 ## 安装
 
 ```bash
-dsh plugin --profile web-desktop add github:2877905731/dsh-think-autoexpand
+# 按实际的 profile 名替换 web（当前 GUI 用 web；desktop 由 Electron 独占）
+dsh plugin --profile web add github:2877905731/dsh-think-autoexpand
 ```
 
 安装后重启 dsh Web 服务生效。
 
+## 兼容性
+
+- v0.3.1：修复 DSH 会话格式 v4 报错 `format v4 message requires a producer-owned source kind`。注入消息的 source 改为生产者自有 kind `plugin:dsh-think-autoexpand`（与官方对未知第三方插件的迁移命名一致），不再使用已退役的 `{ kind: 'plugin' }` 包装。
+- v0.3.0 及更早版本仅适用于会话格式 v3（DSH 0.2.1 及更早）。
+
 ## 卸载
 
 ```bash
-dsh plugin --profile web-desktop remove dsh-think-autoexpand
+dsh plugin --profile web remove dsh-think-autoexpand
 ```
